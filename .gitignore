@@ -1,0 +1,75 @@
+contracts/
+assets/*.json
+assets/ReentrancyAttacker.sol
+source_codes/
+branch_msg/
+logs/
+
+bran/analysis/test_contracts/*
+bran/analysis/test_tmp/*
+
+fuzzMe
+analyse_prefix
+APFuzz*
+dataset/
+result/
+
+info.txt
+debug.txt
+prefix.txt
+analyze.txt
+core
+
+.vscode/
+__pycache__
+
+# sFuzz things
+# Compiled Object files
+*.slo
+*.lo
+*.o
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+
+# VS stuff
+build
+ipch
+*.sdf
+*.opensdf
+*.suo
+*.vcxproj
+*.vcxproj.filters
+*.sln
+
+# VIM stuff
+*.swp
+
+# build system
+build.*/
+sFuzz/deps/
+extdep/install
+extdep/download
+sFuzz/cmake-build-*/
+
+*.pyc
+
+# JetBrains stuff
+.idea/
+bin/
+
+# Visual Studio Code
+browse.VC.db
+
+sFuzz/doc/html
+*.autosave
+sFuzz/node_modules/
+
+sFuzz/dependency_graph.svg
+sFuzz/testfuzzer/googletest-1.8.1/

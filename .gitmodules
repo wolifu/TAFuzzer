@@ -1,0 +1,13 @@
+[submodule "sFuzz/hera"]
+	path = sFuzz/hera
+	url = https://github.com.cnpmjs.org/ewasm/hera
+[submodule "sFuzz/evmc"]
+	path = sFuzz/evmc
+	url = https://github.com.cnpmjs.org/ethereum/evmc
+[submodule "sFuzz/cable"]
+	path = sFuzz/cmake/cable
+	url = https://github.com.cnpmjs.org/ethereum/cable
+
+[submodule "sFuzz/jsonxx"]
+	path = sFuzz/jsonxx
+	url = https://github.com.cnpmjs.org/Nomango/jsonxx
