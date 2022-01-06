@@ -130,7 +130,7 @@ def gen_call_statement(contents, calls, inputs):
             index = i
             break
     # print(content[index])
-    str_head = "            require(msg.sender.call(bytes4(keccak256(\""
+    str_head = "            require(msg.sender.call(abi.encode(keccak256(\""
     if len(calls) == 1:
         if len(inputs[0]) > 0:
             contents[index] = str_head + calls[0] + "\")), " + ", ".join(inputs[0]) + "));\n"
