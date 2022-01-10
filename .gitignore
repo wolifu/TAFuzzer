@@ -1,9 +1,9 @@
-contracts/
 assets/*.json
-assets/ReentrancyAttacker.sol
-source_codes/
-branch_msg/
-logs/
+# assets/ReentrancyAttacker.sol
+# source_codes/
+# contracts/
+# branch_msg/
+# logs/
 
 bran/analysis/test_contracts/*
 bran/analysis/test_tmp/*
