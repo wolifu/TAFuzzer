@@ -3,7 +3,7 @@ import shutil
 
 
 def main():
-    source = "../source_codes"
+    source = "../source_code"
     target = "../contracts"
     files =os.listdir(source)
     for file in files:

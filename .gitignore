@@ -1,6 +1,6 @@
 assets/*.json
 # assets/ReentrancyAttacker.sol
-# source_codes/
+# source_code/
 # contracts/
 # branch_msg/
 # logs/
@@ -14,10 +14,10 @@ APFuzz*
 dataset/
 result/
 
-info.txt
-debug.txt
-prefix.txt
-analyze.txt
+# info.txt
+# debug.txt
+# prefix.txt
+# analyze.txt
 core
 
 .vscode/
