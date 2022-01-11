@@ -129,6 +129,6 @@ Start fuzzing using the command:
 ./fuzz -g -r 0 -d 120 && chmod +x fuzzMe && ./fuzzMe
 ```
 
-**Note:** sfuzz uses Solidity compiler of linux's enviroment, don't forget to install the compiler which is able to compile your smart contracts. If x.sol is the filename, x is the name of a smart contract in file x.sol. Otherwise, no contract will be found
+**Note:** This fuzzing module is adapted from [sfuzz](https://github.com/duytai/sFuzz). It uses Solidity compiler of linux's enviroment, don't forget to install the compiler which is able to compile your smart contracts. If x.sol is the filename, x is the name of a smart contract in file x.sol. Otherwise, no contract will be found
 
 
