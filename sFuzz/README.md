@@ -131,8 +131,4 @@ Start fuzzing using the command:
 
 **Note:** sfuzz uses Solidity compiler of linux's enviroment, don't forget to install the compiler which is able to compile your smart contracts. If x.sol is the filename, x is the name of a smart contract in file x.sol. Otherwise, no contract will be found
 
-## License
 
-[![License](https://img.shields.io/github/license/ethereum/aleth.svg)](LICENSE)
-
-All contributions are made under the [GNU General Public License v3](https://www.gnu.org/licenses/gpl-3.0.en.html). See [LICENSE](LICENSE).
