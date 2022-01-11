@@ -40,6 +40,7 @@ $(TAFuzzer)
 │   └── ...
 ├── logs
 │   └── ...
+├── fuzz
 ├── initial_.sh
 ├── rename_src.sh
 ├── run.sh
@@ -53,10 +54,11 @@ $(TAFuzzer)
 * `assets`:
   * `ReentrancyAttacker_model.sol`: The template for an attacker contract
   * `ReentrancyAttacker.sol`: The attacker contract generated based on the template
-* `source_codes`：Restore the source code of the contract under test
+* `source_codes`: Restore the source code of the contract under test
 * `contracts/example1`: Restore the compiled results of the contract under test
-* `branch_msg`：restore the intermediate representations of the contract under test
-* `logs`：fuzzing execution report
+* `branch_msg`: Restore the intermediate representations of the contract under test
+* `logs`: Restore the execution report during fuzzing
+* `fuzz`: Used to execute the fuzzer
 
 ## Quick Start
 
