@@ -58,7 +58,7 @@ $(TAFuzzer)
 * `contracts/example1`: Restore the compiled results of the contract under test
 * `branch_msg`: Restore the intermediate representations of the contract under test
 * `logs`: Restore the execution report during fuzzing
-* `fuzz`: Used to execute the fuzzer
+* `fuzz`: Execute the fuzzer
 
 ## Quick Start
 
