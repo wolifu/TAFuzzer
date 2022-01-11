@@ -1,17 +1,17 @@
 # TAFuzzer
 
-## 依赖
+## Requirements
 
-TAFuzzer运行于Linux系统（Ubuntu 18.04）
+TAFuzzer is supported on Linux (ideally Ubuntu 18.04).
 
-环境依赖：
+Dependencies: 
 
-* [CMake](https://cmake.org/download/): 最低版本[3.5.1](sFuzz/CMakeLists.txt#L5)
-* [Python](https://www.python.org/downloads/): 最低版本3.5（推荐3.7）
-* Go: 推荐版本1.15
+* [CMake](https://cmake.org/download/): >=[3.5.1](sFuzz/CMakeLists.txt#L5)
+* [Python](https://www.python.org/downloads/): >=3.5（ideally 3.6）
+* Go: 1.15
 * leveldb
 
-## 架构
+## Architecture
 
 ```shell
 $(TAFuzzer)
@@ -43,38 +43,40 @@ $(TAFuzzer)
 └── README.md
 ```
 
-* `sFuzz`；模糊测试工具路径
-* `bran`：抽象解释器路径
-* `tools`：其它静态工具路径
-  * `requirements.txt`：静态工具的python依赖
-* `assets`：放攻击合约文件(可自定义)
-  * `ReentrancyAttacker_model.sol`：攻击合约模板，可以通过改变中的版本改变生成的攻击合约版本
-  * `ReentrancyAttacker.sol`：攻击合约，可以通过模板自动生成，也可以由用户自行定义
-* `source_codes`：放待测合约文件（文件名可不需要任何处理）
-  * 通过执行rename_src.sh脚本可以自动由该目录下的合约在工作目录下生成文件名符合要求的合约
-* `contracts`：工作目录(文件名与合约文件内部的合约名对应一致)
-  * 待测合约路径：合约文件名/contract名.sol
-  * 检测报告路径：合约文件名/contract名_report.json
-* `branch_msg`：存放中间文件
-* `logs`：存放运行日志
+* `sFuzz`: fuzzing tool of our TAFuzzer
+* `bran`: abstract interpreter
+* `tools`: other static analysis tools
+  * `requirements.txt`：python dependecies
+* `assets`:
+  * `ReentrancyAttacker_model.sol`: template for attacker contract
+  * `ReentrancyAttacker.sol`: an attacker contract generated based on th template
+* `source_codes`：restore the contracts under test
+  * rename_src.sh is used to produce the required contract name
+* `contracts`: 
+  * contract under test: contract_name/contract_name.sol
+  * fuzzing log: contract_name/contract_name_report.json
+* `branch_msg`：restore the 
+* `logs`：fuzzing execution report
 
-## 快速开始
+## Quick Start
 
-初始化及编译：
+- Initialization and Install system dependencies
 
 ```bash
 ./initial_.sh
 ```
 
-为source_code文件夹内合约建立工作目录：
+- Make workspace for directory of source codes
 
 ```bash
 ./rename_src.sh
 ```
 
-漏洞检测：
+- Run TAFuzzer and perform vulnerability detection
 
 ```bash
 ./run.sh
 ```
+
+- The code is adapted from [sFuzz](https://github.com/duytai/sFuzz) (a state-of-the-art fuzzer for smart contracts) and [bran](https://github.com/Practical-Formal-Methods/bran) (a static analysis framework for EVM bytecode). 
 
