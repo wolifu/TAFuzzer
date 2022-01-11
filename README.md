@@ -1,5 +1,8 @@
 # TAFuzzer
 
+An effective and efficient targeted fuzzing framework for smart contract vulnerability detection.
+
+
 ## Requirements
 
 TAFuzzer is supported on Linux (ideally Ubuntu 18.04).
