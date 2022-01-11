@@ -46,19 +46,16 @@ $(TAFuzzer)
 └── README.md
 ```
 
-* `sFuzz`: fuzzing tool of our TAFuzzer
-* `bran`: abstract interpreter
-* `tools`: other static analysis tools
-  * `requirements.txt`：python dependecies
+* `sFuzz`: The main fuzzing module of TAFuzzer
+* `bran`: The abstract interpreter for path analysis
+* `tools`: Other static analysis tools for extracting vulnerability-specific patterns
+  * `requirements.txt`：Python dependencies
 * `assets`:
-  * `ReentrancyAttacker_model.sol`: template for attacker contract
-  * `ReentrancyAttacker.sol`: an attacker contract generated based on th template
-* `source_codes`：restore the contracts under test
-  * rename_src.sh is used to produce the required contract name
-* `contracts`: 
-  * contract under test: contract_name/contract_name.sol
-  * fuzzing log: contract_name/contract_name_report.json
-* `branch_msg`：restore the 
+  * `ReentrancyAttacker_model.sol`: The template for an attacker contract
+  * `ReentrancyAttacker.sol`: The attacker contract generated based on the template
+* `source_codes`：Restore the source code of the contract under test
+* `contracts/example1`: Restore the compiled results of the contract under test
+* `branch_msg`：restore the intermediate representations of the contract under test
 * `logs`：fuzzing execution report
 
 ## Quick Start
@@ -69,7 +66,7 @@ $(TAFuzzer)
 ./initial_.sh
 ```
 
-- Make workspace for directory of source codes
+- Make workspace for the contract in directory `source_codes`
 
 ```bash
 ./rename_src.sh
