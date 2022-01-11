@@ -49,15 +49,15 @@ $(TAFuzzer)
 
 * `sFuzz`: The main fuzzing module of TAFuzzer
 * `bran`: The abstract interpreter for path analysis
-* `tools`: Other static analysis tools for extracting vulnerability-specific patterns
-  * `requirements.txt`：Python dependencies
+* `tools`: The static analysis tools for extracting vulnerability-specific patterns
+  * `requirements.txt`：Required python dependencies
 * `assets`:
-  * `ReentrancyAttacker_model.sol`: The template for an attacker contract
+  * `ReentrancyAttacker_model.sol`: The template for construting an attacker contract
   * `ReentrancyAttacker.sol`: The attacker contract generated based on the template
-* `source_code`: Restore the source code of the contract under test
-* `contracts/example1`: Restore the compiled results of the contract under test
-* `branch_msg`: Restore the intermediate representations of the contract under test
-* `logs`: Restore the execution report during fuzzing
+* `source_code`: Store the source code of the contract under test
+* `contracts/example1`: Store the compiled results of the contract under test
+* `branch_msg`: Store the intermediate representations of the contract under test
+* `logs`: Store the execution report during fuzzing
 * `fuzz`: Execute the fuzzer
 
 ## Quick Start
