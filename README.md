@@ -32,7 +32,7 @@ $(TAFuzzer)
 │   ├── ReentrancyAttacker_model.sol
 │   ├── ReentrancyAttacker.sol
 │   └── ...
-├── source_codes
+├── source_code
 │   └── ...
 ├── contracts
 │   └── ...
@@ -54,7 +54,7 @@ $(TAFuzzer)
 * `assets`:
   * `ReentrancyAttacker_model.sol`: The template for an attacker contract
   * `ReentrancyAttacker.sol`: The attacker contract generated based on the template
-* `source_codes`: Restore the source code of the contract under test
+* `source_code`: Restore the source code of the contract under test
 * `contracts/example1`: Restore the compiled results of the contract under test
 * `branch_msg`: Restore the intermediate representations of the contract under test
 * `logs`: Restore the execution report during fuzzing
@@ -68,7 +68,7 @@ $(TAFuzzer)
 ./initial_.sh
 ```
 
-- Make workspace for the contract in directory `source_codes`
+- Make workspace for the contract in directory `source_code`
 
 ```bash
 ./rename_src.sh
