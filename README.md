@@ -82,3 +82,7 @@ $(TAFuzzer)
 
 - The code is adapted from [sFuzz](https://github.com/duytai/sFuzz) (a state-of-the-art fuzzer for smart contracts) and [bran](https://github.com/Practical-Formal-Methods/bran) (a static analysis framework for EVM bytecode). 
 
+## Dataset
+We release the benchmark dataset collected from Etherescan, which contains over 12K Ethereum smart contracts and concerns eight types of vulnerabilities. 
+
+Download the benchmark dataset at [TAFuzzer_data]().
