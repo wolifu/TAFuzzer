@@ -12,6 +12,7 @@ funcs_dataDependency = dict()  # param data dependency of each functions
 funcs_order = dict()
 
 
+# 初始化function列表fdList   初始化function_order  序号都置为零
 def init_fdList(abis):
     for node in abis:
         param_len = "0"
@@ -26,6 +27,7 @@ def init_fdList(abis):
             funcs_order[node["name"] + ":" + param_len] = 0
 
 
+# 得到全局变量以及类型映射，初始化param_list
 def init_paramList(_ast_nodes):
     for _anode in _ast_nodes:
         _name = _anode["name"]
@@ -43,13 +45,13 @@ def init_paramList(_ast_nodes):
 
 def find_param_path(obj, _currerent_path):
     if isinstance(obj, dict):
-        key_value_iterator = (x for x in obj.items())
+        key_value_iterator = (x for x in obj.items())  # items() 方法把字典中每对 key 和 value 组成一个元组，并把这些元组放在列表中返回
     elif isinstance(obj, list):
-        key_value_iterator = (x for x in enumerate(obj))
+        key_value_iterator = (x for x in enumerate(obj))  # 利用它可以同时获得索引和值
     else:
         return
 
-    _params = list(param_list.keys())
+    _params = list(param_list.keys())  # 全局变量的变量名列表
     _params.append("PlaceholderStatement")
 
     for key, value in key_value_iterator:
@@ -63,22 +65,29 @@ def find_param_path(obj, _currerent_path):
 
 def get_dataDependency(_ast_nodes, _interfaceType, _recordParm):
     for _anode in _ast_nodes:
-        if "attributes" not in _anode.keys() or\
+        if "attributes" not in _anode.keys() or \
                 "isConstructor" not in _anode["attributes"].keys():
             continue
+        #  跳过变量声明，找到函数声明
         _name = _anode["name"]
         if _name == _interfaceType:
+
             _fName = _anode["attributes"]["name"]
             if _anode["attributes"]["isConstructor"]:
                 _fName = "constructor"
             if _fName == "":
                 _fName = "fallback" + "," + _anode["attributes"]["stateMutability"]
+
+            # 函数和对应参数的个数
             _fName += ":" + str(len(_anode["children"][0]["children"]))
+
             if _fName not in _recordParm.keys():
                 _recordParm[_fName] = []
+
             for _funNode in _anode["children"]:
                 _name = _funNode["name"]
                 if _name == "Block":
+
                     path_iter = list(find_param_path(_funNode["children"], []))
                     for path in path_iter:
                         node = _funNode["children"].copy()
@@ -111,8 +120,109 @@ def get_dataDependency(_ast_nodes, _interfaceType, _recordParm):
                         if "function" in node["type"]:
                             _fnode = node[step] + ":" + str(
                                 len(node["argumentTypes"]) if node["argumentTypes"] else 0
-                                )
+                            )
                         node = node[step]
+                        if _fnode in list(funcs_dataDependency.keys()):
+                            _rw = {_fnode: "FunctionCall"}
+                        elif _fnode != "":
+                            continue
+                        elif node == "PlaceholderStatement":
+                            _rw = {node: "_"}
+                        elif len(_opt) > 1:
+                            _keyOpt = ""
+                            if param_list[node] != 2:
+                                _keyOpt = _opt[-2]
+                            elif len(_opt) > 2:
+                                _keyOpt = _opt[-3]
+                            # print(node)
+                            # print(_opt)
+                            # print("\n")
+                            if _optStep[0] == "FunctionCall":
+                                _rw = {node: "r"}
+                                _recordParm[_fName].insert(-1, _rw)
+                                _rwIsRecord = True
+                            elif _keyOpt == "Assignment" or \
+                                    (param_list[node] == 1 and _keyOpt == "MemberAccess"):
+                                _rw = {node: "w"}
+                            else:
+                                _rw = {node: "r"}
+                        # elif (param_list[node] == 0 and len(_opt) > 1 and _opt[-2] == "Assignment") or \
+                        #         (param_list[node] == 1 and len(_opt) > 1 and _opt[-2] == "MemberAccess") or \
+                        #         (param_list[node] == 2 and len(_opt) > 2 and _opt[-3] == "Assignment"):
+                        #     _rw = {node: "w"}
+                        else:
+                            _rw = {node: "r"}
+
+                        if not _rwIsRecord:
+                            _recordParm[_fName].append(_rw)
+
+
+def get_ModifierDependency(_ast_nodes, _interfaceType, _recordParm):
+    for _anode in _ast_nodes:
+        # if "attributes" not in _anode.keys() or\
+        #         "isConstructor" not in _anode["attributes"].keys():
+        #     continue
+        #  跳过变量声明，找到函数声明
+        _name = _anode["name"]
+        if _name == _interfaceType:
+
+            _fName = _anode["attributes"]["name"]
+            # if _anode["attributes"]["isConstructor"]:
+            #     _fName = "constructor"
+            # if _fName == "":
+            #     _fName = "fallback" + "," + _anode["attributes"]["stateMutability"]
+
+            # 函数和对应参数的个数
+            # _fName += ":" + str(len(_anode["children"][0]["children"]))
+
+            if _fName not in _recordParm.keys():
+                _recordParm[_fName] = []
+
+            for _funNode in _anode["children"]:
+                _name = _funNode["name"]
+                if _name == "Block":
+
+                    path_iter = list(find_param_path(_funNode["children"], []))
+
+                    # print(path_iter)
+
+                    for path in path_iter:
+                        node = _funNode["children"].copy()
+                        _opt = []
+                        _optStep = []
+                        for step in path:
+                            if step == path[-1]:
+                                break
+                            if len(path) > 2 and step == path[-3]:  # rules of abi.json, find param option
+                                try:
+                                    # print(json.dumps(node[path[-3]]["name"], indent=4))
+                                    _opt.append(node[path[-3]]["name"])
+                                    _optStep.append(node[path[-3]]["children"][0]["name"])
+                                    # _optStep.append(step)
+                                except:
+                                    pass
+                                # _optT = node[path[-3]]["name"]
+                            node = node[step]
+                        # print(json.dumps(_opt, indent=4))
+                        # print(json.dumps(node, indent=4))
+                        # print(path)
+                        # print(_opt)
+                        # print(json.dumps(_optStep, indent=4))
+                        # print(_optStep)
+                        # print(_opt)
+                        # print("\n")
+                        # print(_opt[-2])
+                        _rwIsRecord = False
+                        _fnode = ""
+
+                        # print(node)
+
+                        # if "function" in node["type"]:
+                        #     _fnode = node[step] + ":" + str(
+                        #         len(node["argumentTypes"]) if node["argumentTypes"] else 0
+                        #         )
+                        node = node[step]
+                        # print(node)
                         if _fnode in list(funcs_dataDependency.keys()):
                             _rw = {_fnode: "FunctionCall"}
                         elif _fnode != "":
@@ -160,12 +270,16 @@ def m_dataDependency(_ast_nodes, _beforePlaceholder):
             _fName += ":" + str(len(_anode["children"][0]["children"]))
             if _fName not in funcs_dataDependency.keys():
                 funcs_dataDependency[_fName] = []
+
+            # 问题1
+
             for _funNode in _anode["children"]:
                 _name = _funNode["name"]
                 if _name == "ModifierInvocation":
                     for _m in _funNode["children"]:
                         if _m["name"] != "Identifier":
                             continue
+                        # print(_m["attributes"]["value"])
                         if _m["attributes"]["value"] not in modifier_dataDependency.keys():
                             continue
                         _reachPlaceholder = False
@@ -220,6 +334,7 @@ def get_funcsOrder():
                             if list(px.keys())[0] == dependedPara and list(px.values())[0] == "w":
                                 weightList.append(func_x)
             weightList.reverse()
+            # print(json.dumps(weightList, indent=4))
             w = 1
             for fw in weightList:
                 funcs_weight[fw] += w
@@ -272,7 +387,6 @@ def write_order(abis, _last):
 
     return json.dumps(abis)
 
-
 if __name__ == '__main__':
     contract_name = para_input()
     if len(contract_name) == 0:
@@ -308,7 +422,7 @@ if __name__ == '__main__':
 
     if len(param_list.keys()) != 0:
 
-        get_dataDependency(ast_nodes, "ModifierDefinition", modifier_dataDependency)
+        get_ModifierDependency(ast_nodes, "ModifierDefinition", modifier_dataDependency)
         # print(json.dumps(modifier_dataDependency, indent=4))
         m_dataDependency(ast_nodes, True)
         # print(json.dumps(funcs_dataDependency, indent=4))
