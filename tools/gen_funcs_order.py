@@ -10,7 +10,7 @@ param_list = dict()  # param of current contract
 modifier_dataDependency = dict()
 funcs_dataDependency = dict()  # param data dependency of each functions
 funcs_order = dict()
-
+funcs_isRepeat = dict()
 
 # 初始化function列表fdList   初始化function_order  序号都置为零
 def init_fdList(abis):
@@ -314,6 +314,23 @@ def replace_internalCall():
                         funcs_dataDependency[_name].insert(_index, _itm)
             _index += 1
 
+def get_isRepeat():
+    if funcs_dataDependency:
+        for func,params in funcs_dataDependency.items():
+            flag = False
+            for p in params:
+                if list(p.values())[0] == "r":
+                    dependePara = list(p.keys())[0]
+                    for p1 in params:
+                        if list(p1.keys())[0] == dependePara and list(p1.values())[0] == "w":
+                            flag = True
+                            break;
+                if flag:
+                    break;
+            if flag:
+                funcs_isRepeat[func] = 1
+            else:
+                funcs_isRepeat[func] = 0
 
 def get_funcsOrder():
     if funcs_dataDependency:
@@ -371,6 +388,7 @@ def get_funcsOrder():
 
 
 def write_order(abis, _last):
+    
     for node in abis:
         param_len = "0"
         try:
@@ -380,10 +398,13 @@ def write_order(abis, _last):
         # node["order"] = _last
         if node["type"] == "constructor":
             node["order"] = _last
+            node["isRepeat"] = 0
         if node["type"] == "fallback":
             node["order"] = funcs_order["fallback," + node["stateMutability"] + ":" + param_len]
+            node["isRepeat"] = funcs_isRepeat["fallback," + node["stateMutability"] + ":" + param_len]
         if node["type"] == "function" and not node["constant"]:
             node["order"] = funcs_order[node["name"] + ":" + param_len]
+            node["isRepeat"] = funcs_isRepeat[node["name"] + ":" + param_len]
 
     return json.dumps(abis)
 
@@ -434,7 +455,9 @@ if __name__ == '__main__':
     # print(json.dumps(funcs_dataDependency, indent=4))
 
     last_fi = get_funcsOrder()
+    get_isRepeat()
     print(funcs_order)
+    print(funcs_isRepeat)
 
     json_content["contracts"][contract_name + ":" + contract]["abi"] = \
         write_order(json.loads(json_content["contracts"][contract_name + ":" + contract]["abi"]), last_fi)
