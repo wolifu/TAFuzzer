@@ -1,5 +1,6 @@
 #include "ContractABI.h"
 #include <regex>
+#include <algorithm>
 
 using namespace std;
 namespace pt = boost::property_tree;
@@ -341,6 +342,7 @@ ContractABI::ContractABI(string abiJson)
     pt::ptree root;
     pt::read_json(ss, root);
     this->fds.resize(root.size());
+    vector<FuncDef> m_fds;
     int realSize = 0;
     // cout << "before : " << this->fds.size() << endl;
     for (auto node : root)
@@ -359,6 +361,11 @@ ContractABI::ContractABI(string abiJson)
             if (node.second.get_child_optional("payable"))
             {
                 payable = node.second.get<bool>("payable");
+            }
+            //need repeat functions
+            if (node.second.get<int>("isRepeat") == 1)
+            {
+                m_fds.push_back(FuncDef("fallback", tds, payable));
             }
             this->fds[order] = FuncDef("fallback", tds, payable);
             if (order > realSize)
@@ -379,12 +386,27 @@ ContractABI::ContractABI(string abiJson)
                 string type = inputNode.second.get<string>("type");
                 tds.push_back(TypeDef(type));
             }
+            if (node.second.get<int>("isRepeat") == 1)
+            {
+                m_fds.push_back(FuncDef(name, tds, payable));
+            }
             this->fds[order] = FuncDef(name, tds, payable);
             if (order > realSize)
                 realSize = order;
             // cout << name << " : " << order << endl;
         }
     };
+    for (vector<FuncDef>::iterator it = m_fds.begin(); it != m_fds.end(); it++)
+    {
+        vector<FuncDef>::iterator pos = find(fds.begin(),fds.end(),*it);
+        if (pos != fds.end())
+        {
+            fds.insert(pos,*it);
+            realSize++;
+        }
+        
+    }
+    
     this->fds.resize(realSize + 1);
     // cout << "after : " << this->fds.size() << endl;
 }
